@@ -1,0 +1,51 @@
+.sidebar {
+    position: fixed;
+    left: 5%;
+    top: 20px;
+    width: 52px;
+    height: 50vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    svg:not(:first-child) {
+        margin-top: 30px;
+    }
+
+    svg {
+        fill: #EFEEE0;
+        fill-opacity: 0.25;
+        transition: all ease-in 0.2s;
+
+        &:hover {
+            fill: #FACD66;
+            fill-opacity: 1;
+            filter: drop-shadow(0px 1px 1px rgba(250, 206, 102, 0.25));
+        }
+    }
+
+    &__logo {
+        width: 100%;
+        height: 73px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    &__link {
+        margin-top: 40px;
+        display: flex;
+        flex-direction: column;
+        padding: 20px 15px;
+        background-color: #1A1E1F;
+        border-radius: 20px;
+
+        &:last-child {
+            margin-top: 20px;
+        }
+    }
+}
+
+// fill="#FACD66" - hover
+// fill="#EFEEE0" - main
+// fill-opacity="0.25"

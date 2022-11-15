@@ -1,0 +1,34 @@
+.cover {
+    margin-top: 40px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    position: relative;
+
+    &__cover {
+        img {
+            width: 280px;
+            height: 280px;
+            border-radius: 35px;
+            object-fit: cover;
+        }
+    }
+    &__row {
+        margin-left: 27px;
+        &_title {
+            h2 {
+                margin-top: 10px;
+            }
+        }
+        &_btn {
+            position: absolute;
+            bottom: 8px;
+            display: flex;
+            button:not(:first-child) {
+                margin-left: 10px;
+            }
+        }
+    }
+
+
+}
