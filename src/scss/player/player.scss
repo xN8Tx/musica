@@ -92,6 +92,7 @@
             height: 4px;
             background: rgba(255, 255, 255, 0.04);
             border-radius: 50px;
+            transition: all ease 0.5s;
             .now {
                 width: var(--time);
                 height: 4px;
@@ -101,8 +102,9 @@
                 left: 0;
                 background: #FACD66;
                 border-radius: 50px;
+                transition: all ease 0.5s;
                 img {
-                    transform: translate(-5px, -4px);
+                    transform: translate(var(--cursor), -4px);
                 }
             }
         }

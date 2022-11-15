@@ -59,10 +59,10 @@ document.addEventListener('DOMContentLoaded', (e) => {
             src: 'audio/8Frail.mp3'
         },
         {
-            name: 'Concreate',
+            name: 'Concrete',
             group: 'Crystal Castles',
             time: '196',
-            src: 'audio/9Concreate.mp3'
+            src: 'audio/9Concrete.mp3'
         },
         {
             name: 'Ornament',
@@ -197,13 +197,15 @@ document.addEventListener('DOMContentLoaded', (e) => {
 
     // controllers
     const playerBlock = document.querySelector('.player');
+
     function pausePlyer() {
         play.innerHTML = `
         <svg width="9" height="10" viewBox="0 0 9 10" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M0.333344 4.77269V2.95366C0.333344 0.619264 1.98563 -0.33566 4.0017 0.831537L5.57814 1.741L7.15463 2.65047C9.17069 3.81767 9.17069 5.7277 7.15463 6.8949L5.57814 7.80437L4.0017 8.71383C1.98563 9.88103 0.333344 8.92611 0.333344 6.59171V4.77269Z" fill="#EFEEE0"/>
         </svg> 
         `
-        audio.pause()
+        audio.pause();
+        stopTimelineAnimation();
         play.setAttribute('data-status', 'pause');
     }
     function playPlayer() {
@@ -213,7 +215,9 @@ document.addEventListener('DOMContentLoaded', (e) => {
             <path d="M0 2.5V15.5C0 15.9647 0 16.197 0.0384295 16.3902C0.196243 17.1836 0.815994 17.8037 1.60938 17.9615C1.80257 18 2.0349 18 2.49956 18C2.96421 18 3.19698 18 3.39018 17.9615C4.18356 17.8037 4.8041 17.1836 4.96191 16.3902C5 16.1987 5 15.9687 5 15.5122V15.5V2.5V2.48777C5 2.03126 5 1.80136 4.96191 1.60986C4.8041 0.816482 4.18356 0.196243 3.39018 0.0384294C3.19698 0 2.96465 0 2.5 0C2.03535 0 1.80257 0 1.60938 0.0384295C0.815994 0.196243 0.196243 0.816482 0.0384294 1.60986C0 1.80306 0 2.03534 0 2.5Z" fill="white"/>
         </svg>
         `
-        audio.play()
+        audio.play();
+        stopTimelineAnimation();
+        timelineAnimation();
         play.setAttribute('data-status', 'play');
         playerBlock.classList.add('active');
     };
@@ -252,6 +256,8 @@ document.addEventListener('DOMContentLoaded', (e) => {
                 </svg>
             `
             audio.play();
+            stopTimelineAnimation();
+            timelineAnimation();
             play.setAttribute('data-status', 'play');
         } else if(play.getAttribute('data-status') == 'play') {
             play.innerHTML = `
@@ -259,7 +265,8 @@ document.addEventListener('DOMContentLoaded', (e) => {
                     <path d="M0.333344 4.77269V2.95366C0.333344 0.619264 1.98563 -0.33566 4.0017 0.831537L5.57814 1.741L7.15463 2.65047C9.17069 3.81767 9.17069 5.7277 7.15463 6.8949L5.57814 7.80437L4.0017 8.71383C1.98563 9.88103 0.333344 8.92611 0.333344 6.59171V4.77269Z" fill="#EFEEE0"/>
                 </svg> 
             `
-            audio.pause()
+            stopTimelineAnimation();
+            audio.pause();
             play.setAttribute('data-status', 'pause');
         }
     });
@@ -352,5 +359,64 @@ document.addEventListener('DOMContentLoaded', (e) => {
     });
 
 
+    // CHANGE TIMELINE
+    let timelineIntreval;
 
+    function timelineAnimation() {
+        const  line = document.querySelector('.now');
+        let lastTime;
+
+        timelineIntreval = setInterval(() => {
+            let audioCurrentTime = audio.currentTime;
+            let audioNowProgress = (audioCurrentTime / audio.duration) * 100;
+
+            if(audioCurrentTime == audio.duration && !repeat.getAttribute('data-status') == "active") {
+                autoplay();
+            }
+            if(lastTime == audioCurrentTime) clearTimeout(timelineIntreval);
+
+            document.documentElement.style.setProperty('--time', `${audioNowProgress}%`);
+            document.documentElement.style.setProperty('--cursor', `${line.clientWidth - 5}px`);
+            console.log('works!');
+            lastTime = audioCurrentTime;
+        }, 500);
+    };
+
+    function stopTimelineAnimation() {
+        console.log('doesnt works!');
+        clearTimeout(timelineIntreval);
+    };
+
+    // CHANGE VOLUME
+    const   volumeLine  = document.querySelector('.player__volume_line'),
+            volume      = document.querySelector('.player__volume');
+
+    volume.addEventListener('click', (e) => {
+        let change = e.pageX - volumeLine.offsetLeft;
+
+        document.documentElement.style.setProperty('--volume', `${change}px`);
+
+        audio.volume = (change / volumeLine.clientWidth).toFixed(1);
+    });
+
+
+    // NEXT TRACK
+    function autoplay() {
+        if (random.getAttribute('data-status') == 'active') {
+            idSong = Number(Math.floor(Math.random() * (Number(album[1].length) - 1)));
+            audio.setAttribute('src', album[1][idSong].src);
+            changeList(idSong);
+            stopTimelineAnimation();
+            timelineAnimation();
+            playPlayer();
+        } else {
+            idSong = Number(idSong) + 1;
+            audio.setAttribute('src', album[1][idSong].src);
+            changeList(idSong);
+            
+            playPlayer();
+            stopTimelineAnimation();
+            timelineAnimation();
+        }
+    };
 });
