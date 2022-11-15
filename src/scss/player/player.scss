@@ -134,3 +134,15 @@
         }
     }
 }
+
+#random[data-status="active"] {
+        svg {
+            fill: #FACD66;
+        }
+}
+
+#repeat[data-status="active"] {
+    svg {
+        fill: #FACD66;
+    }
+}
