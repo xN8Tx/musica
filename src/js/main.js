@@ -359,7 +359,8 @@ document.addEventListener('DOMContentLoaded', (e) => {
     });
 
 
-    // CHANGE TIMELINE
+    // TIMELINE
+    // animation
     let timelineIntreval;
 
     function timelineAnimation() {
@@ -370,22 +371,31 @@ document.addEventListener('DOMContentLoaded', (e) => {
             let audioCurrentTime = audio.currentTime;
             let audioNowProgress = (audioCurrentTime / audio.duration) * 100;
 
-            if(audioCurrentTime == audio.duration && !repeat.getAttribute('data-status') == "active") {
+            if(audioCurrentTime == audio.duration && repeat.getAttribute('data-status') == "nonactive") {
                 autoplay();
             }
             if(lastTime == audioCurrentTime) clearTimeout(timelineIntreval);
 
             document.documentElement.style.setProperty('--time', `${audioNowProgress}%`);
             document.documentElement.style.setProperty('--cursor', `${line.clientWidth - 5}px`);
-            console.log('works!');
             lastTime = audioCurrentTime;
         }, 500);
     };
 
     function stopTimelineAnimation() {
-        console.log('doesnt works!');
         clearTimeout(timelineIntreval);
     };
+    // change
+    const playerTimeline = document.querySelector('.player__controllers_timeline');
+
+    playerTimeline.addEventListener('click', (e) => {
+        let change = e.pageX - playerTimeline.offsetLeft;
+        let size = (change / playerTimeline.clientWidth) * 100;
+        let time = audio.duration / 100;
+        let newTime = time * size;
+
+        audio.currentTime = newTime;
+    });
 
     // CHANGE VOLUME
     const   volumeLine  = document.querySelector('.player__volume_line'),
@@ -406,6 +416,8 @@ document.addEventListener('DOMContentLoaded', (e) => {
             idSong = Number(Math.floor(Math.random() * (Number(album[1].length) - 1)));
             audio.setAttribute('src', album[1][idSong].src);
             changeList(idSong);
+            changeArticle();
+
             stopTimelineAnimation();
             timelineAnimation();
             playPlayer();
@@ -413,6 +425,7 @@ document.addEventListener('DOMContentLoaded', (e) => {
             idSong = Number(idSong) + 1;
             audio.setAttribute('src', album[1][idSong].src);
             changeList(idSong);
+            changeArticle();
             
             playPlayer();
             stopTimelineAnimation();
